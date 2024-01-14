@@ -176,6 +176,9 @@ export interface IAppState {
    */
   readonly sidebarWidth: IConstrainedValue
 
+  /** The width of the root sidebar (pinned repostory list) */
+  readonly rootSidebarWith: IConstrainedValue
+
   /** The width of the commit summary column in the history view */
   readonly commitSummaryWidth: IConstrainedValue
 
