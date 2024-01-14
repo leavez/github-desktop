@@ -942,6 +942,10 @@ export class Dispatcher {
     return this.appStore._revertCommit(repository, commit)
   }
 
+  public setShowRootSidebar(show: boolean) {
+    return this.appStore._setShowRootSidebar(show)
+  }
+
   /**
    * Set the width of the repository sidebar to the given
    * value. This affects the changes and history sidebar

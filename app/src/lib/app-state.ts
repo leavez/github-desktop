@@ -162,6 +162,11 @@ export interface IAppState {
   /** Map from the emoji shortcut (e.g., :+1:) to the image's local path. */
   readonly emoji: Map<string, string>
 
+  readonly showRootSidebar: boolean
+
+  /** The width of the root sidebar (pinned repostory list) */
+  readonly rootSidebarWith: IConstrainedValue
+
   /**
    * The width of the repository sidebar.
    *
@@ -175,9 +180,6 @@ export interface IAppState {
    * repository.
    */
   readonly sidebarWidth: IConstrainedValue
-
-  /** The width of the root sidebar (pinned repostory list) */
-  readonly rootSidebarWith: IConstrainedValue
 
   /** The width of the commit summary column in the history view */
   readonly commitSummaryWidth: IConstrainedValue

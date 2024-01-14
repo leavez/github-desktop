@@ -458,6 +458,8 @@ export class AppStore extends TypedBaseStore<IAppState> {
    */
   private appIsFocused: boolean = false
 
+  private showRootSideBar: boolean = true
+
   private sidebarWidth = constrain(defaultSidebarWidth)
   private rootSidebarWidth = constrain(defaultRootSidebarWidth)
   private commitSummaryWidth = constrain(defaultCommitSummaryWidth)
@@ -973,8 +975,9 @@ export class AppStore extends TypedBaseStore<IAppState> {
       showWelcomeFlow: this.showWelcomeFlow,
       focusCommitMessage: this.focusCommitMessage,
       emoji: this.emoji,
-      sidebarWidth: this.sidebarWidth,
+      showRootSidebar: this.showRootSideBar,
       rootSidebarWith: this.rootSidebarWidth,
+      sidebarWidth: this.sidebarWidth,
       commitSummaryWidth: this.commitSummaryWidth,
       stashedFilesWidth: this.stashedFilesWidth,
       pullRequestFilesListWidth: this.pullRequestFileListWidth,
@@ -5124,6 +5127,13 @@ export class AppStore extends TypedBaseStore<IAppState> {
   public _setCommitMessageFocus(focus: boolean) {
     if (this.focusCommitMessage !== focus) {
       this.focusCommitMessage = focus
+      this.emitUpdate()
+    }
+  }
+
+  public _setShowRootSidebar(show: boolean) {
+    if (this.showRootSideBar !== show) {
+      this.showRootSideBar = show
       this.emitUpdate()
     }
   }
