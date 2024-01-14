@@ -466,6 +466,8 @@ export class App extends React.Component<IAppProps, IAppState> {
         return this.showStashedChanges()
       case 'hide-stashed-changes':
         return this.hideStashedChanges()
+      case 'toggle-pinned-repository-list':
+        return this.togglePinnedRepositoryList()
       case 'test-show-notification':
         return this.testShowNotification()
       case 'test-prune-branches':
@@ -1092,6 +1094,10 @@ export class App extends React.Component<IAppProps, IAppState> {
     }
 
     this.props.dispatcher.hideStashedChanges(state.repository)
+  }
+
+  private togglePinnedRepositoryList() {
+    this.props.dispatcher.setShowRootSidebar(!this.state.showRootSidebar)
   }
 
   public componentDidMount() {
@@ -2767,16 +2773,18 @@ export class App extends React.Component<IAppProps, IAppState> {
         className={this.getDesktopAppContentsClassNames()}
       >
         <div id="app-root-column-layout">
-          <Resizable
-            id="app-root-column-layout-sidebar"
-            width={this.state.rootSidebarWith.value + 1} // +1px for the border
-            maximumWidth={this.state.rootSidebarWith.max}
-            minimumWidth={this.state.rootSidebarWith.min}
-            onReset={this.handleRootSidebarWidthReset}
-            onResize={this.handleRootSidebarResize}
-          >
-            {this.renderRepositoryList()}
-          </Resizable>
+          {this.state.showRootSidebar ? (
+            <Resizable
+              id="app-root-column-layout-sidebar"
+              width={this.state.rootSidebarWith.value + 1} // +1px for the border
+              maximumWidth={this.state.rootSidebarWith.max}
+              minimumWidth={this.state.rootSidebarWith.min}
+              onReset={this.handleRootSidebarWidthReset}
+              onResize={this.handleRootSidebarResize}
+            >
+              {this.renderRepositoryList()}
+            </Resizable>
+          ) : null}
           <div style={{ flex: 1 }}>
             {this.renderToolbar()}
             {this.renderBanner()}
@@ -2944,6 +2952,7 @@ export class App extends React.Component<IAppProps, IAppState> {
     const enableFocusTrap = this.state.currentPopup === null
     return (
       <ToolbarDropdown
+        disabled={this.state.showRootSidebar}
         icon={icon}
         title={title}
         description={__DARWIN__ ? 'Current Repository' : 'Current repository'}
