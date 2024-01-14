@@ -126,6 +126,7 @@ const allMenuIds: ReadonlyArray<MenuIDs> = [
   'show-history',
   'show-repository-list',
   'show-branches-list',
+  'toggle-pinned-repository-list',
   'open-working-directory',
   'show-repository-settings',
   'open-external-editor',
@@ -239,6 +240,7 @@ function getRepositoryMenuBuilder(state: IAppState): MenuStateBuilder {
     'show-changes',
     'show-history',
     'show-branches-list',
+    'toggle-pinned-repository-list',
     'open-external-editor',
     'compare-to-branch',
   ]

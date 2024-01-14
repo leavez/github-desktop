@@ -195,6 +195,15 @@ export function buildDefaultMenu({
       },
       separator,
       {
+        label: __DARWIN__
+          ? 'Toggle Pinned Repository List'
+          : 'Toggle &Pinned Repository List',
+        id: 'toggle-pinned-repository-list',
+        accelerator: 'Ctrl+R',
+        click: emit('toggle-pinned-repository-list'),
+      },
+      separator,
+      {
         label: __DARWIN__ ? 'Go to Summary' : 'Go to &Summary',
         id: 'go-to-commit-message',
         accelerator: 'CmdOrCtrl+G',
