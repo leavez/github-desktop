@@ -23,6 +23,7 @@ export type MenuIDs =
   | 'show-history'
   | 'show-repository-list'
   | 'show-branches-list'
+  | 'toggle-pinned-repository-list'
   | 'open-working-directory'
   | 'show-repository-settings'
   | 'open-external-editor'

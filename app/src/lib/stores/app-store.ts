@@ -338,7 +338,9 @@ const RecentRepositoriesKey = 'recently-selected-repositories'
 const RecentRepositoriesLength = 3
 
 const defaultSidebarWidth: number = 250
+const defaultRootSidebarWidth: number = 200
 const sidebarWidthConfigKey: string = 'sidebar-width'
+const rootSidebarWidthConfigKey: string = 'root-sidebar-width'
 
 const defaultCommitSummaryWidth: number = 250
 const commitSummaryWidthConfigKey: string = 'commit-summary-width'
@@ -456,7 +458,10 @@ export class AppStore extends TypedBaseStore<IAppState> {
    */
   private appIsFocused: boolean = false
 
+  private showRootSideBar: boolean = true
+
   private sidebarWidth = constrain(defaultSidebarWidth)
+  private rootSidebarWidth = constrain(defaultRootSidebarWidth)
   private commitSummaryWidth = constrain(defaultCommitSummaryWidth)
   private stashedFilesWidth = constrain(defaultStashedFilesWidth)
   private pullRequestFileListWidth = constrain(defaultPullRequestFileListWidth)
@@ -970,6 +975,8 @@ export class AppStore extends TypedBaseStore<IAppState> {
       showWelcomeFlow: this.showWelcomeFlow,
       focusCommitMessage: this.focusCommitMessage,
       emoji: this.emoji,
+      showRootSidebar: this.showRootSideBar,
+      rootSidebarWith: this.rootSidebarWidth,
       sidebarWidth: this.sidebarWidth,
       commitSummaryWidth: this.commitSummaryWidth,
       stashedFilesWidth: this.stashedFilesWidth,
@@ -2083,6 +2090,9 @@ export class AppStore extends TypedBaseStore<IAppState> {
     this.sidebarWidth = constrain(
       getNumber(sidebarWidthConfigKey, defaultSidebarWidth)
     )
+    this.rootSidebarWidth = constrain(
+      getNumber(rootSidebarWidthConfigKey, defaultRootSidebarWidth)
+    )
     this.commitSummaryWidth = constrain(
       getNumber(commitSummaryWidthConfigKey, defaultCommitSummaryWidth)
     )
@@ -2231,8 +2241,22 @@ export class AppStore extends TypedBaseStore<IAppState> {
     // 220 was determined as the minimum value since it is the smallest width
     // that will still fit the placeholder text in the branch selector textbox
     // of the history tab
-    const maxSidebarWidth = available - toolbarButtonsWidth
-    this.sidebarWidth = constrain(this.sidebarWidth, 220, maxSidebarWidth)
+    const minSiderBarWidth = 220
+    const maxRootSidebarWidth =
+      available - toolbarButtonsWidth - minSiderBarWidth
+    this.rootSidebarWidth = constrain(
+      this.rootSidebarWidth,
+      160,
+      maxRootSidebarWidth
+    )
+
+    const maxSidebarWidth =
+      available - toolbarButtonsWidth - this.rootSidebarWidth.value
+    this.sidebarWidth = constrain(
+      this.sidebarWidth,
+      minSiderBarWidth,
+      maxSidebarWidth
+    )
 
     // Now calculate the width we have left to distribute for the other panes
     available -= clamp(this.sidebarWidth)
@@ -5107,6 +5131,13 @@ export class AppStore extends TypedBaseStore<IAppState> {
     }
   }
 
+  public _setShowRootSidebar(show: boolean) {
+    if (this.showRootSideBar !== show) {
+      this.showRootSideBar = show
+      this.emitUpdate()
+    }
+  }
+
   public _setSidebarWidth(width: number): Promise<void> {
     this.sidebarWidth = { ...this.sidebarWidth, value: width }
     setNumber(sidebarWidthConfigKey, width)
@@ -5116,9 +5147,30 @@ export class AppStore extends TypedBaseStore<IAppState> {
     return Promise.resolve()
   }
 
+  public _setRootSidebarWidth(width: number): Promise<void> {
+    this.rootSidebarWidth = { ...this.rootSidebarWidth, value: width }
+    setNumber(rootSidebarWidthConfigKey, width)
+    this.updateResizableConstraints()
+    this.emitUpdate()
+
+    return Promise.resolve()
+  }
+
   public _resetSidebarWidth(): Promise<void> {
     this.sidebarWidth = { ...this.sidebarWidth, value: defaultSidebarWidth }
     localStorage.removeItem(sidebarWidthConfigKey)
+    this.updateResizableConstraints()
+    this.emitUpdate()
+
+    return Promise.resolve()
+  }
+
+  public _resetRootSidebarWidth(): Promise<void> {
+    this.rootSidebarWidth = {
+      ...this.rootSidebarWidth,
+      value: defaultRootSidebarWidth,
+    }
+    localStorage.removeItem(rootSidebarWidthConfigKey)
     this.updateResizableConstraints()
     this.emitUpdate()
 

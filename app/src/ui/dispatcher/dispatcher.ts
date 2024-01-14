@@ -942,6 +942,10 @@ export class Dispatcher {
     return this.appStore._revertCommit(repository, commit)
   }
 
+  public setShowRootSidebar(show: boolean) {
+    return this.appStore._setShowRootSidebar(show)
+  }
+
   /**
    * Set the width of the repository sidebar to the given
    * value. This affects the changes and history sidebar
@@ -951,6 +955,10 @@ export class Dispatcher {
    */
   public setSidebarWidth(width: number): Promise<void> {
     return this.appStore._setSidebarWidth(width)
+  }
+
+  public setRootSidebarWidth(width: number): Promise<void> {
+    return this.appStore._setRootSidebarWidth(width)
   }
 
   /**
@@ -992,6 +1000,10 @@ export class Dispatcher {
    */
   public resetSidebarWidth(): Promise<void> {
     return this.appStore._resetSidebarWidth()
+  }
+
+  public resetRootSidebarWidth(): Promise<void> {
+    return this.appStore._resetRootSidebarWidth()
   }
 
   /**

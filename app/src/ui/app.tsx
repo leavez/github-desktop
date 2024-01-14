@@ -172,6 +172,7 @@ import { UnsupportedOSBannerDismissedAtKey } from './banners/windows-version-no-
 import { offsetFromNow } from '../lib/offset-from'
 import { getNumber } from '../lib/local-storage'
 import { RepoRulesBypassConfirmation } from './repository-rules/repo-rules-bypass-confirmation'
+import { Resizable } from './resizable'
 
 const MinuteInMilliseconds = 1000 * 60
 const HourInMilliseconds = MinuteInMilliseconds * 60
@@ -465,6 +466,8 @@ export class App extends React.Component<IAppProps, IAppState> {
         return this.showStashedChanges()
       case 'hide-stashed-changes':
         return this.hideStashedChanges()
+      case 'toggle-pinned-repository-list':
+        return this.togglePinnedRepositoryList()
       case 'test-show-notification':
         return this.testShowNotification()
       case 'test-prune-branches':
@@ -1091,6 +1094,10 @@ export class App extends React.Component<IAppProps, IAppState> {
     }
 
     this.props.dispatcher.hideStashedChanges(state.repository)
+  }
+
+  private togglePinnedRepositoryList() {
+    this.props.dispatcher.setShowRootSidebar(!this.state.showRootSidebar)
   }
 
   public componentDidMount() {
@@ -2751,17 +2758,41 @@ export class App extends React.Component<IAppProps, IAppState> {
     })
   }
 
+  private handleRootSidebarWidthReset = () => {
+    this.props.dispatcher.resetRootSidebarWidth()
+  }
+
+  private handleRootSidebarResize = (width: number) => {
+    this.props.dispatcher.setRootSidebarWidth(width)
+  }
+
   private renderApp() {
     return (
       <div
         id="desktop-app-contents"
         className={this.getDesktopAppContentsClassNames()}
       >
-        {this.renderToolbar()}
-        {this.renderBanner()}
-        {this.renderRepository()}
-        {this.renderPopups()}
-        {this.renderDragElement()}
+        <div id="app-root-column-layout">
+          {this.state.showRootSidebar ? (
+            <Resizable
+              id="app-root-column-layout-sidebar"
+              width={this.state.rootSidebarWith.value + 1} // +1px for the border
+              maximumWidth={this.state.rootSidebarWith.max}
+              minimumWidth={this.state.rootSidebarWith.min}
+              onReset={this.handleRootSidebarWidthReset}
+              onResize={this.handleRootSidebarResize}
+            >
+              {this.renderRepositoryList()}
+            </Resizable>
+          ) : null}
+          <div style={{ flex: 1 }}>
+            {this.renderToolbar()}
+            {this.renderBanner()}
+            {this.renderRepository()}
+            {this.renderPopups()}
+            {this.renderDragElement()}
+          </div>
+        </div>
       </div>
     )
   }
@@ -2919,9 +2950,9 @@ export class App extends React.Component<IAppProps, IAppState> {
      * in some of our dialogs (noticed with Lists). Disabled this when dialogs
      * are open */
     const enableFocusTrap = this.state.currentPopup === null
-
     return (
       <ToolbarDropdown
+        disabled={this.state.showRootSidebar}
         icon={icon}
         title={title}
         description={__DARWIN__ ? 'Current Repository' : 'Current repository'}

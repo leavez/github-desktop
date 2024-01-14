@@ -1,0 +1,15 @@
+@import '../mixins';
+
+#app-root-column-layout {
+  display: flex;
+  flex-direction: row;
+  flex: 1 1 auto;
+  height: 100%;
+  min-height: 0;
+
+  &-sidebar {
+    height: 100%;
+    border-right: 1px solid var(--box-border-color);
+    flex-shrink: 0;
+  }
+}
