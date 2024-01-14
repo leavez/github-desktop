@@ -199,7 +199,7 @@ export function buildDefaultMenu({
           ? 'Toggle Pinned Repository List'
           : 'Toggle &Pinned Repository List',
         id: 'toggle-pinned-repository-list',
-        accelerator: 'Ctrl+R',
+        accelerator: 'CmdOrCtrl+Alt+L',
         click: emit('toggle-pinned-repository-list'),
       },
       separator,
