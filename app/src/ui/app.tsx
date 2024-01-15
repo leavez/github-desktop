@@ -2785,7 +2785,7 @@ export class App extends React.Component<IAppProps, IAppState> {
               {this.renderRepositoryList()}
             </Resizable>
           ) : null}
-          <div style={{ flex: 1 }}>
+          <div id="app-root-column-layout-content">
             {this.renderToolbar()}
             {this.renderBanner()}
             {this.renderRepository()}
